@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from app01 import models
 from app01.utils.pagination import Pagination
+from app01.utils.bootstrap import BootStrapModelForm
 
 import random
 from django import forms
@@ -95,22 +96,16 @@ def user_add(request):
 # ##############################ModelForm实例#######################################
 
 
-class UserModelForm(forms.ModelForm):
-    name = forms.CharField(min_length=3, label="用户名")
+class UserModelForm(BootStrapModelForm):
+    name = forms.CharField(
+        min_length=3,
+        label="用户名",
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
 
     class Meta:
         model = models.UserInfo
         fields = ["name", "password", "age", "account", "create_time", "depart", "gender"]
-        # widgets = {
-        #     "name": forms.TextInput(attrs={"class": "form-control"}),
-        #     "password": forms.PasswordInput(attrs={"class": "form-control"}),
-        #     "age": forms.TextInput(attrs={"class": "form-control"}),
-        # }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for name, field in self.fields.items():
-            field.widget.attrs = {"class": "form-control", "placeholder": field.label}
 
 
 def user_model_form_add(request):
@@ -156,7 +151,7 @@ def user_edit(request, nid):
 
 
 # ################################# 靓号管理 ##########################
-class NumModelForm(forms.ModelForm):
+class NumModelForm(BootStrapModelForm):
     # 验证：方式1    字段+正则
     mobile = forms.CharField(
         label="手机号",
@@ -167,11 +162,6 @@ class NumModelForm(forms.ModelForm):
         model = models.PrettyNum
         # fields = "__all__"
         fields = ["mobile", "price", "level", "status"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for name, field in self.fields.items():
-            field.widget.attrs = {"class": "form-control", "placeholder": field.label}
 
     # 验证：方式2    钩子方法
     def clean_mobile(self):
@@ -188,7 +178,7 @@ class NumModelForm(forms.ModelForm):
         return txt_mobile
 
 
-class NumEditModelForm(forms.ModelForm):
+class NumEditModelForm(BootStrapModelForm):
     # 验证：方式1    字段+正则
     mobile = forms.CharField(
         label="手机号",
@@ -199,11 +189,6 @@ class NumEditModelForm(forms.ModelForm):
         model = models.PrettyNum
         # fields = "__all__"
         fields = ["mobile", "price", "level", "status"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for name, field in self.fields.items():
-            field.widget.attrs = {"class": "form-control", "placeholder": field.label}
 
     # 验证：方式2    钩子方法
     def clean_mobile(self):

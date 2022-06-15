@@ -24,7 +24,32 @@
 //                       '.:::::'                    ':'````..
 """
 """
-文件说明：自定义的分页组件
+文件说明：自定义的分页组件————想要使用这个组件需要做到：
+
+在视图函数中：
+    def pretty_list(request):
+
+        # 1.根据自己的情况去筛选自己的数据
+        queryset = models.PrettyNum.objects.all()
+
+        # 2.实例化分页对象
+        page_object = Pagination(request, queryset)
+
+        context = {
+            "queryset":page_object.page_queryset,   # 分完页的数据
+            "page_string":page_object.html()   # 生成页码
+            }
+        
+        return render(request, "pretty_list.html", context)
+
+在HTML页面中
+    {% for obj in queryset %}
+        {{ obj.xx }}
+    {% endfor %}
+
+    <ul class="pagination"">
+        {{ page_string }}   
+    </ul>
     
 """
 import copy
