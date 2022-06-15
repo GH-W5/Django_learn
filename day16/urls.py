@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app01.views import depart, user, pretty_num
+from app01.views import depart, user, pretty_num, admin
 
 urlpatterns = [
     # 部门管理
@@ -39,4 +39,11 @@ urlpatterns = [
     # http://127.0.0.1:8000/depart/1/edit/
     path('num/<int:nid>/edit/', pretty_num.num_edit),
     path('num/<int:nid>/delete/', pretty_num.num_delete),
+
+    # 管理员管理
+    path('admin/list/', admin.admin_list),
+    path('admin/add/', admin.admin_add),
+    # http://127.0.0.1:8000/depart/1/edit/
+    path('admin/<int:nid>/edit/', admin.admin_edit),
+    path('admin/<int:nid>/delete/', admin.admin_delete),
 ]

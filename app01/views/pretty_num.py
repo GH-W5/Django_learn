@@ -97,4 +97,4 @@ def num_edit(request, nid):
         form.save()
         return redirect("/num/list/")
     # 校验失败 （在页面上显示错误信息）
-    return render(request, "num_model_form_add.html", {"form": form})
+    return render(request, "num_edit.html", {"form": form})
