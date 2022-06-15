@@ -33,7 +33,6 @@ from app01.utils.pagination import Pagination
 from app01.utils.form import NumEditModelForm, NumModelForm
 
 
-
 # ################################# 靓号管理 ##########################
 def num_list(request):
     """ 靓号列表 """

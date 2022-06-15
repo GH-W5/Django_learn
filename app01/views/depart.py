@@ -30,6 +30,7 @@
 from django.shortcuts import render, redirect
 from app01 import models
 
+
 def depart_list(request):
     """ 部门列表 """
 
