@@ -28,7 +28,6 @@
     
 """
 
-
 class Pagination(object):
 
     def __init__(
