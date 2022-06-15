@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from app01 import models
+from app01.utils.pagination import Pagination
+
+import random
 from django import forms
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-import random
-from django.utils.safestring import mark_safe
 
 
 def depart_list(request):
@@ -63,7 +64,12 @@ def depart_edit(request, nid):
 def user_list(request):
     """ 用户列表 """
     queryset = models.UserInfo.objects.all()
-    return render(request, 'user_list.html', {'queryset': queryset})
+    page_object = Pagination(request, queryset=queryset)
+    context = {
+        'queryset': page_object.page_queryset,  # 分完页数据
+        "page_string": page_object.html()  # 页码
+    }
+    return render(request, 'user_list.html', context)
 
 
 def user_add(request):
@@ -225,86 +231,16 @@ def num_list(request):
     if search_data:
         data_dict = {"mobile__contains": search_data}
 
-    # 根据用户想要访问的页码，计算出起止位置
-    page = int(request.GET.get('page', 1))
-    page_size = 10
-    start = (page - 1) * page_size
-    end = page * page_size
+    queryset = models.PrettyNum.objects.filter(**data_dict).order_by("-level")
+    page_object = Pagination(request, queryset=queryset)
 
-    # select * from 表 order by level desc;
-    queryset = models.PrettyNum.objects.filter(**data_dict).order_by("-level")[start:end]
+    context = {
+        "search_data": search_data,
 
-    # 数据总条数
-    total_count = models.PrettyNum.objects.filter(**data_dict).order_by("-level").count()
-    # 总页码
-    total_page_count, div = divmod(total_count, page_size)
-    if div:
-        total_page_count += 1
-
-    # 计算出当前页的前5页和后5页
-    plus = 5
-    if total_page_count <= 2 * plus + 1:
-        # 数据库中的数据比较少，没有达到11页
-        start_page = 1
-        end_page = total_page_count
-    else:
-        # 数据库中的数据比较多，大于11页
-        # 当前页小于5
-        if page <= plus:
-            start_page = 1
-            end_page = 2 * plus + 1
-        else:
-            # 当前页大于5
-            # 当前页+5大于总页码
-            if (page + plus) > total_page_count:
-                start_page = total_page_count - 2 * plus
-                end_page = total_page_count
-            else:
-                start_page = page - plus
-                end_page = page + plus
-
-    # 页码 由后台计算并加入到前端中
-    page_str_list = []
-    # 首页
-    page_str_list.append('<li><a href="?page={}">首页</a></li>'.format(1))
-    # 上一页
-    if page > 1:
-        prev = '<li><a href="?page={}">上一页</a></li>'.format(page - 1)
-    else:
-        prev = '<li><a href="?page={}">上一页</a></li>'.format(1)
-    page_str_list.append(prev)
-    # 页码
-    for i in range(start_page, end_page + 1):
-        if i == page:
-            ele = '<li class="active"><a href="?page={}">{}</a></li>'.format(i, i)
-        else:
-            ele = '<li><a href="?page={}">{}</a></li>'.format(i, i)
-        page_str_list.append(ele)
-    # 下一页
-    if page < end_page:
-        prev = '<li><a href="?page={}">下一页</a></li>'.format(page + 1)
-    else:
-        prev = '<li><a href="?page={}">下一页</a></li>'.format(total_page_count)
-    page_str_list.append(prev)
-    # 尾页
-    page_str_list.append('<li><a href="?page={}">尾页</a></li>'.format(total_page_count))
-
-    # 页码搜索框
-    search_string = """
-        <li>
-            <form style="float: left;margin-left: -1px;" method="get">
-                <input type="text" name="page" class="form-control" placeholder="页码"
-                style="position:relative;float:left;display:inline-block;width: 80px;border-radius:0;" >
-                <button style="border-radius: 0;" class="btn btn-default" type="submit">跳转</button>
-            </form>
-        </li>
-    """
-    page_str_list.append(search_string)
-
-    page_string = mark_safe("".join(page_str_list))
-
-    return render(request, 'num_list.html',
-                  {'queryset': queryset, "search_data": search_data, "page_string": page_string})
+        'queryset': page_object.page_queryset,  # 分完页数据
+        "page_string": page_object.html()  # 页码
+    }
+    return render(request, 'num_list.html', context)
 
 
 def num_model_form_add(request):
