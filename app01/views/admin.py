@@ -62,7 +62,7 @@ from django.shortcuts import render, redirect
 
 from app01 import models
 from app01.utils.pagination import Pagination
-from app01.utils.form import AdminModelForm
+from app01.utils.form import AdminModelForm, AdminEditModelForm, AdminResetModelForm
 
 
 # ################################# 管理员管理 ##########################
@@ -84,9 +84,10 @@ def admin_list(request):
 
 def admin_add(request):
     """ 添加管理员 ModelForm版本 """
+    title = "新建管理员"
     if request.method == "GET":
         form = AdminModelForm()
-        return render(request, "change.html", {"form": form, "title": "新建管理员"})
+        return render(request, "change.html", {"form": form, "title": title})
 
     # 用户POST提交数据，数据校验
     form = AdminModelForm(data=request.POST)
@@ -95,7 +96,7 @@ def admin_add(request):
         form.save()
         return redirect("/admin/list/")
     # 校验失败 （在页面上显示错误信息）
-    return render(request, "change.html", {"form": form, "title": "新建管理员"})
+    return render(request, "change.html", {"form": form, "title": title})
 
 
 def admin_delete(request, nid):
@@ -114,15 +115,39 @@ def admin_edit(request, nid):
     if not row_object:
         return redirect("/admin/list/")
 
+    title = "重置密码"
     if request.method == "GET":
-        form = AdminModelForm(instance=row_object)
-        return render(request, 'change.html', {"form": form, "title": "编辑管理员"})
+        form = AdminEditModelForm(instance=row_object)
+        return render(request, 'change.html', {"form": form, "title": title})
 
     # 用户POST提交数据，数据校验
-    form = AdminModelForm(data=request.POST, instance=row_object)
+    form = AdminEditModelForm(data=request.POST, instance=row_object)
     if form.is_valid():
         # print(form.cleaned_data)
         form.save()
         return redirect("/admin/list/")
     # 校验失败 （在页面上显示错误信息）
-    return render(request, "change.html", {"form": form, "title": "编辑管理员"})
+    return render(request, "change.html", {"form": form, "title": title})
+
+
+def admin_reset(request, nid):
+    """ 重置密码 """
+    # 根据nid，获取它的数据 【obj】
+    row_object = models.Admin.objects.filter(id=nid).first()
+    # 空
+    if not row_object:
+        return redirect("/admin/list/")
+
+    title = "重置密码"
+    if request.method == "GET":
+        form = AdminResetModelForm()
+        return render(request, 'change.html', {"form": form, "title": title})
+
+    # 用户POST提交数据，数据校验
+    form = AdminResetModelForm(data=request.POST, instance=row_object)
+    if form.is_valid():
+        # print(form.cleaned_data)
+        form.save()
+        return redirect("/admin/list/")
+    # 校验失败 （在页面上显示错误信息）
+    return render(request, "change.html", {"form": form, "title": title})

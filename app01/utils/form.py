@@ -127,3 +127,32 @@ class AdminModelForm(BootStrapModelForm):
             raise ValidationError("密码不一致")
         # 返回什么，以后保存到数据就是什么
         return confirm
+
+
+class AdminEditModelForm(BootStrapModelForm):
+    class Meta:
+        model = models.Admin
+        fields = ["username"]
+
+
+class AdminResetModelForm(BootStrapModelForm):
+    confirm_password = forms.CharField(
+        label="确认密码",
+    )
+
+    class Meta:
+        model = models.Admin
+        fields = ["password", "confirm_password"]
+
+    def clean_password(self):
+        pwd = self.cleaned_data["password"]
+        return md5(pwd)
+
+    # 钩子方法
+    def clean_confirm_password(self):
+        pwd = self.cleaned_data["password"]
+        confirm = md5(self.cleaned_data["confirm_password"])
+        if pwd != confirm:
+            raise ValidationError("密码不一致")
+        # 返回什么，以后保存到数据就是什么
+        return confirm

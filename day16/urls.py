@@ -45,5 +45,6 @@ urlpatterns = [
     path('admin/add/', admin.admin_add),
     # http://127.0.0.1:8000/depart/1/edit/
     path('admin/<int:nid>/edit/', admin.admin_edit),
+    path('admin/<int:nid>/reset/', admin.admin_reset),
     path('admin/<int:nid>/delete/', admin.admin_delete),
 ]
