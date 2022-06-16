@@ -75,9 +75,9 @@ def admin_list(request):
     # 检查用户是否已经登录，已经登录，继续向下走，未登录，跳转回登录页面。
     # 用户发来请求，获取cookie随机字符串，拿着随机字符串看看session中有没有
     # request.session["info"]
-    info = request.session.get("info", "")
-    if not info:
-        return redirect("/login/")
+    # info = request.session.get("info", "")
+    # if not info:
+    #     return redirect("/login/")
 
     queryset = models.Admin.objects.all()
     page_object = Pagination(request, queryset=queryset)
