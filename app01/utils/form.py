@@ -178,3 +178,10 @@ class LoginForm(BootStrapForm):
     def clean_password(self):
         pwd = self.cleaned_data["password"]
         return md5(pwd)
+
+
+
+class TaskModeForm(BootStrapModelForm):
+    class Meta:
+        model = models.Task
+        fields = "__all__"
