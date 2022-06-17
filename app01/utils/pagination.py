@@ -46,8 +46,10 @@
     {% for obj in queryset %}
         {{ obj.xx }}
     {% endfor %}
-
-    <ul class="pagination"">
+    
+    # 分页
+    
+    <ul class="pagination">
         {{ page_string }}   
     </ul>
     
