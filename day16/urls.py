@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app01.views import depart, user, pretty_num, admin, account, task, order
+from app01.views import depart, user, pretty_num, admin, account, task, order, chart
 
 urlpatterns = [
     # 部门管理
@@ -64,4 +64,8 @@ urlpatterns = [
     path('order/delete/', order.order_delete),
     path('order/ditail/', order.order_ditail),
     path('order/edit/', order.order_edit),
+
+    # 数据统计
+    path('chart/list/', chart.chart_list),
+    path('chart/bar/', chart.chart_bar),
 ]
