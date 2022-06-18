@@ -180,8 +180,15 @@ class LoginForm(BootStrapForm):
         return md5(pwd)
 
 
-
 class TaskModeForm(BootStrapModelForm):
     class Meta:
         model = models.Task
         fields = "__all__"
+
+
+class OrderModelForm(BootStrapModelForm):
+    class Meta:
+        model = models.Order
+        # fields = "__all__"
+        # fields = []
+        exclude= ["oid"]
