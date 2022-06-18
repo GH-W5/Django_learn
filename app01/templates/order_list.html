@@ -185,13 +185,13 @@
                             $("#deleteModal").modal("hide");
 
                             // 在页面上，将当前一行数据删除 （js）
-                            $("tr[uid='" + DELETE_ID + "']").remove();
+                            // $("tr[uid='" + DELETE_ID + "']").remove();
 
                             // 要删除的ID置空
                             DELETE_ID = 0;
 
-                            // 用JS实现页面的刷新
-                            {#location.reload();#}
+                            // 简单方法 实现页面的刷新
+                            location.reload();
                         }else {
                             // 删除失败
                             alert(res.error);
