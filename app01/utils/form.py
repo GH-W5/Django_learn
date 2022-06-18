@@ -191,4 +191,4 @@ class OrderModelForm(BootStrapModelForm):
         model = models.Order
         # fields = "__all__"
         # fields = []
-        exclude= ["oid"]
+        exclude= ["oid", "admin"]

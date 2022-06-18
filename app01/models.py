@@ -86,7 +86,7 @@ class Task(models.Model):
 class Order(models.Model):
     """ 订单表 """
     oid = models.CharField(verbose_name="订单号", max_length=64)
-    title = models.CharField(verbose_name="名称", max_length=32)
+    title = models.CharField(verbose_name="商品名", max_length=32)
     price = models.IntegerField(verbose_name="价格")
     status_choices = (
         (1, "待支付"),
