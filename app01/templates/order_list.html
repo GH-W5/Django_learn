@@ -40,10 +40,9 @@
                         <td>{{ obj.get_status_display }}</td>
                         <td>{{ obj.admin.username }}</td>
                         <td>
-                            <a class="btn btn-primary btn-xs" href="/order/{{ obj.id }}/edit/">编辑</a>
-                            <input uid="{{ obj.id }}" class="btn btn-danger  btn-xs btn-delete" type="button" value="删除">
-
-                            {#                            <a class="btn btn-danger btn-xs" href="/order/{{ obj.id }}/delete/">删除</a>#}
+                            <input uid="{{ obj.id }}" class="btn btn-primary  btn-xs btn-edit" type="button" value="编辑">
+                            <input uid="{{ obj.id }}" class="btn btn-danger  btn-xs btn-delete" type="button"
+                                   value="删除">
                         </td>
                     </tr>
                 {% endfor %}
@@ -56,7 +55,7 @@
         </ul>
     </div>
 
-    <!--  新建订单（对话框）  -->
+    <!--  新建/编辑订单（对话框）  -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -96,7 +95,7 @@
                 <p style="margin: 10px 0;">删除后，所有关联的相关数据都会被删除。</p>
                 <p style="text-align: right">
                     <button id="btnConfirmDelete" type="button" class="btn btn-danger">确 定</button>
-                    <button type="button" class="btn btn-default"  data-dismiss="modal">取 消</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
                 </p>
             </div>
         </div>
@@ -108,6 +107,7 @@
 
     <script type="text/javascript">
         var DELETE_ID;  // 全局变量
+        var EDIT_ID;  // 全局变量
 
         $(function () {
             bindBtnAddEvent();
@@ -117,10 +117,19 @@
             bindBtnDeleteEvent();
 
             bindBtnConfirmDeleteEvent();
+
+            bindBtnEditEvent();
         })
 
         function bindBtnAddEvent() {
             $("#btnAdd").click(function () {
+                // 将正在编辑的ID设置为空
+                EDIT_ID = undefined;
+                // 清空对话框中的数据
+                $("#formAdd")[0].reset;
+
+                // 设置对话框的标题
+                $("#myModalLabel").text("新建");
                 // 点击按钮，显示对话框
                 $("#myModal").modal("show");
             })
@@ -130,28 +139,66 @@
             $("#btnSave").click(function () {
                 // 清除错误信息
                 $(".error-msg").empty()
-                // 发送ajax请求
-                $.ajax({
-                    url: "/order/add/",
-                    type: "post",
-                    data: $("#formAdd").serialize(),
-                    dataType: "JSON",
-                    success: function (res) {
-                        if (res.status) {
-                            alert("添加成功");
-                            // 清空表单
-                            $("#formAdd")[0].reset();
-                            // 关闭对话框
-                            $("#myModal").modal("hide")
-                            // 用JS实现页面的刷新
-                            location.reload();
+
+                if (EDIT_ID) {
+                    // 编辑
+                    doEdit();
+                } else {
+                    doAdd();
+                }
+            })
+        }
+
+        function doEdit() {
+            // 发送ajax请求 编辑
+            $.ajax({
+                url: "/order/edit/" + "?uid=" + EDIT_ID,
+                type: "post",
+                data: $("#formAdd").serialize(),
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        // 清空表单
+                        $("#formAdd")[0].reset();
+                        // 关闭对话框
+                        $("#myModal").modal("hide")
+                        // 用JS实现页面的刷新
+                        location.reload();
+                    } else {
+                        if (res.tips) {
+                            alert(res.tips);
                         } else {
                             $.each(res.error, function (name, error_list) {
                                 $("#id_" + name).next().text(error_list[0]);
                             })
                         }
                     }
-                })
+                }
+            })
+        }
+
+        function doAdd() {
+            // 发送ajax请求 添加
+            $.ajax({
+                url: "/order/add/",
+                type: "post",
+                data: $("#formAdd").serialize(),
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        // alert("添加成功");
+                        // 清空表单
+                        $("#formAdd")[0].reset();
+                        // 关闭对话框
+                        $("#myModal").modal("hide")
+                        // 用JS实现页面的刷新
+                        location.reload();
+                    } else {
+                        $.each(res.error, function (name, error_list) {
+                            $("#id_" + name).next().text(error_list[0]);
+                        })
+                    }
+                }
             })
         }
 
@@ -167,19 +214,19 @@
             })
         }
 
-        function bindBtnConfirmDeleteEvent(){
-            $("#btnConfirmDelete").click(function (){
+        function bindBtnConfirmDeleteEvent() {
+            $("#btnConfirmDelete").click(function () {
                 // 点击确认删除按钮，将全局变量中设置的那个要删除的ID发送到后台
                 $.ajax({
                     // url:"/order/" + DELETE_ID + "/delete/",
-                    url:"/order/delete/",
+                    url: "/order/delete/",
                     type: "GET",
                     data: {
                         uid: DELETE_ID
                     },
                     dataType: "JSON",
-                    success:function (res){
-                        if (res.status){
+                    success: function (res) {
+                        if (res.status) {
                             // 删除成功
                             // 隐藏删除框
                             $("#deleteModal").modal("hide");
@@ -192,7 +239,7 @@
 
                             // 简单方法 实现页面的刷新
                             location.reload();
-                        }else {
+                        } else {
                             // 删除失败
                             alert(res.error);
                         }
@@ -200,6 +247,45 @@
                 })
             })
 
+        }
+
+        function bindBtnEditEvent() {
+            $(".btn-edit").click(function () {
+                // 清空对话框中的数据
+                $("#formAdd")[0].reset;
+                var uid = $(this).attr("uid");
+                EDIT_ID = uid;
+                // 发送Ajax去后台获取当前行是的相关数据
+                $.ajax({
+                    url: "/order/ditail",
+                    type: "GET",
+                    data: {
+                        uid: uid,
+                    },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            row_object = res.data;
+                            console.log(row_object);
+
+                            // 将数据赋值到对话框中的标签中
+                            $.each(res.data, function (name, value) {
+                                $("#id_" + name).val(value);
+                            })
+
+                            // 修改对话框的标题
+                            $("#myModalLabel").text("编辑");
+
+                            // 显示编辑对话框
+                            $("#myModal").modal("show");
+                        } else {
+                            alert(res.error);
+                        }
+                    }
+                })
+
+                // 在对话框 中默认看到
+            })
         }
 
 
