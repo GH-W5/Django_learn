@@ -192,3 +192,12 @@ class OrderModelForm(BootStrapModelForm):
         # fields = "__all__"
         # fields = []
         exclude= ["oid", "admin"]
+
+
+class UpForm(BootStrapForm):
+    bootstrap_exclude_fields = ["img"]
+
+    name = forms.CharField(label="姓名")
+    age = forms.IntegerField(label="年龄")
+    img = forms.FileField(label="图像")
+

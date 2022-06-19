@@ -13,17 +13,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.urls import path, re_path
+from django.views.static import serve
 from django.contrib import admin
-from django.urls import path
 from app01.views import depart, user, pretty_num, admin, account, task, order, chart, upload
 
 urlpatterns = [
+
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
+
     # 部门管理
     path('depart/list/', depart.depart_list),
     path('depart/add/', depart.depart_add),
     path('depart/delete/', depart.depart_delete),
     # http://127.0.0.1:8000/depart/1/edit/
     path('depart/<int:nid>/edit/', depart.depart_edit),
+    path('depart/multi/', depart.depart_multi),
 
     # 用户管理
     path('user/list/', user.user_list),
@@ -71,4 +77,5 @@ urlpatterns = [
 
     # 上传文件
     path('upload/list/', upload.upload_list),
+    path('upload/form/', upload.upload_form),
 ]
