@@ -20,11 +20,29 @@
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>订单号</th>
-                    <th>商品名</th>
-                    <th>价格</th>
-                    <th>状态</th>
-                    <th>管理员</th>
+                    <th>项目编号</th>
+                    <th>项目名称</th>
+                    <th>任务编号</th>
+                    <th>任务名称</th>
+                    <th>报工序号</th>
+                    <th>任务占比</th>
+                    <th>汇报人部门</th>
+                    <th>汇报人编号</th>
+                    <th>汇报人姓名</th>
+                    <th>汇报日期</th>
+                    <th>报工日期</th>
+                    <th>工作内容描述</th>
+                    <th>当日投入工作量</th>
+                    <th>审核人编号</th>
+                    <th>审核人</th>
+                    <th>审核完成率</th>
+                    <th>审核结果</th>
+                    <th>今日完成工作量</th>
+                    <th>报工方式</th>
+                    <th>项目大类</th>
+                    <th>项目类型</th>
+                    <th>任务责任人编号</th>
+                    <th>任务审核人编号</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -32,11 +50,28 @@
                 {% for obj in queryset %}
                     <tr uid="{{ obj.id }}">
                         <td>{{ obj.id }}</td>
-                        <td>{{ obj.oid }}</td>
-                        <td>{{ obj.title }}</td>
-                        <td>{{ obj.price }}</td>
-                        <td>{{ obj.get_status_display }}</td>
-                        <td>{{ obj.admin.username }}</td>
+                        <td>{{ obj.item_number }}</td>
+                        <td>{{ obj.item_name }}</td>
+                        <td>{{ obj.task_number }}</td>
+                        <td>{{ obj.task_name }}</td>
+                        <td>{{ obj.report_task_num }}</td>
+                        <td>{{ obj.task_proportion }}</td>
+                        <td>{{ obj.reporter_depart }}</td>
+                        <td>{{ obj.reporter_number }}</td>
+                        <td>{{ obj.reporter_name }}</td>
+                        <td>{{ obj.report_date }}</td>
+                        <td>{{ obj.report_task_date }}</td>
+                        <td>{{ obj.work_detail }}</td>
+                        <td>{{ obj.workload }}</td>
+                        <td>{{ obj.auditor_number }}</td>
+                        <td>{{ obj.auditor }}</td>
+                        <td>{{ obj.audit_completion_rate }}</td>
+                        <td>{{ obj.audit_result }}</td>
+                        <td>{{ obj.get_your_work_done_today }}</td>
+                        <td>{{ obj.way_to_report_work }}</td>
+                        <td>{{ obj.item_big_type }}</td>
+                        <td>{{ obj.item_type }}</td>
+                        <td>{{ obj.task_auditor_no }}</td>
                         <td>
                             <input uid="{{ obj.id }}" class="btn btn-primary  btn-xs btn-edit" type="button" value="编辑">
                             <input uid="{{ obj.id }}" class="btn btn-danger  btn-xs btn-delete" type="button"
