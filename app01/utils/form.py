@@ -208,3 +208,10 @@ class UpModalForm(BootStrapModelForm):
         model = models.City
         fields = "__all__"
 
+class KqTaskModelForm(BootStrapModelForm):
+    class Meta:
+        model = models.KqTask
+        fields = "__all__"
+        # fields = []
+        # exclude= ["oid", "admin"]
+

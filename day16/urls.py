@@ -17,7 +17,7 @@ from django.conf import settings
 from django.urls import path, re_path
 from django.views.static import serve
 from django.contrib import admin
-from app01.views import depart, user, pretty_num, admin, account, task, order, chart, upload
+from app01.views import depart, user, pretty_num, admin, account, task, order, chart, upload, kq_task
 
 urlpatterns = [
 
@@ -82,4 +82,11 @@ urlpatterns = [
 
     # 城市列表
     path('city/list/', upload.city_list),
+
+    # kq任务管理
+    path('kq_task/list/', kq_task.task_list),
+    path('kq_task/add/', kq_task.task_add),
+    path('kq_task/delete/', kq_task.task_delete),
+    path('kq_task/ditail/', kq_task.task_ditail),
+    path('kq_task/edit/', kq_task.task_edit),
 ]

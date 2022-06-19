@@ -103,10 +103,37 @@ class Boss(models.Model):
     img = models.CharField(verbose_name="图像", max_length=128)
 
 
-
 class City(models.Model):
     """ 城市 """
     name = models.CharField(verbose_name="名称", max_length=32)
     count = models.IntegerField(verbose_name="人口")
     # 本质上数据库也是CharField，自动保存数据。
     img = models.FileField(verbose_name="Logo", max_length=128, upload_to='city/')
+
+
+class KqTask(models.Model):
+    """ kq任务 """
+    item_number = models.CharField(verbose_name="项目编号", max_length=32)
+    item_name = models.CharField(verbose_name="项目名称", max_length=64)
+    task_number = models.CharField(verbose_name="任务编号", max_length=32)
+    task_name = models.CharField(verbose_name="任务名称", max_length=64)
+    report_task_num = models.CharField(verbose_name="项目编号", max_length=32)
+    task_proportion = models.FloatField(verbose_name="任务占比")
+    reporter_depart = models.CharField(verbose_name="汇报人部门", max_length=64)
+    reporter_number = models.CharField(verbose_name="汇报人编号", max_length=32)
+    reporter_name = models.CharField(verbose_name="汇报人姓名", max_length=32)
+    report_date = models.DateField(verbose_name="汇报日期")
+    report_task_date = models.DateField(verbose_name="报工日期")
+    work_detail = models.TextField(verbose_name="工作内容")
+    workload = models.CharField(verbose_name="当日投入工作量", max_length=32)
+    auditor_number = models.CharField(verbose_name="审核人编号", max_length=32)
+    auditor = models.CharField(verbose_name="审核人", max_length=32)
+    audit_completion_rate = models.CharField(verbose_name="审核完成率", max_length=32)
+    audit_result = models.CharField(verbose_name="审核结果", max_length=32)
+    get_your_work_done_today = models.CharField(verbose_name="今日完成工作量", max_length=32)
+    way_to_report_work = models.CharField(verbose_name="报工方式", max_length=32)
+    item_big_type = models.CharField(verbose_name="项目大类", max_length=32)
+    item_type = models.CharField(verbose_name="项目类型", max_length=32)
+    task_leader_no = models.CharField(verbose_name="任务负责人编号", max_length=32)
+    task_auditor_no = models.CharField(verbose_name="任务审核人编号", max_length=32)
+
