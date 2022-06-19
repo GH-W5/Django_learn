@@ -98,3 +98,8 @@ def upload_modal_form(request):
         form.save()
         return HttpResponse("上传成功")
     return render(request, "upload_form.html", {"form": form, "title": "ModalForm上传文件"})
+
+
+def city_list(request):
+    """ 可视化表单 """
+    pass

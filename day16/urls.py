@@ -79,4 +79,7 @@ urlpatterns = [
     path('upload/list/', upload.upload_list),
     path('upload/form/', upload.upload_form),
     path('upload/modal/form/', upload.upload_modal_form),
+
+    # 城市列表
+    path('city/list/', upload.city_list),
 ]
