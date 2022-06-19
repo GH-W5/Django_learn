@@ -31,7 +31,7 @@ import os
 from django.shortcuts import render, HttpResponse
 from django.conf import settings
 
-from app01.utils.form import UpForm
+from app01.utils.form import UpForm, UpModalForm
 from app01 import models
 
 
@@ -84,3 +84,17 @@ def upload_form(request):
         return HttpResponse("....")
 
     return render(request, "upload_form.html", {"form": form, "title": title, })
+
+
+def upload_modal_form(request):
+    """ 基于modalform上传文件和数据 """
+    if request.method == "GET":
+        form = UpModalForm
+        return render(request, "upload_form.html", {"form": form, "title": "ModalForm上传文件"})
+
+    form = UpModalForm(data=request.POST, files=request.FILES)
+    if form.is_valid():
+        # 自动保存到数据库
+        form.save()
+        return HttpResponse("上传成功")
+    return render(request, "upload_form.html", {"form": form, "title": "ModalForm上传文件"})

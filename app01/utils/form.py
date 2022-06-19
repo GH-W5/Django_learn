@@ -201,3 +201,10 @@ class UpForm(BootStrapForm):
     age = forms.IntegerField(label="年龄")
     img = forms.FileField(label="图像")
 
+
+class UpModalForm(BootStrapModelForm):
+    bootstrap_exclude_fields = ["img"]
+    class Meta:
+        model = models.City
+        fields = "__all__"
+
