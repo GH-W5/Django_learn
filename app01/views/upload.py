@@ -29,6 +29,7 @@
 """
 import os
 from django.shortcuts import render, HttpResponse
+from django.conf import settings
 
 from app01.utils.form import UpForm
 from app01 import models
@@ -65,9 +66,11 @@ def upload_form(request):
     if form.is_valid():
         # 1.读取图片内容。写入到文件夹中并获取文件路径
         image_object = form.cleaned_data.get("img")
-        db_file_path = os.path.join("static", "img", image_object.name)
-        file_path = os.path.join("app01", db_file_path)
-        f = open(file_path, mode='wb')
+
+        # media_path = os.path.join(settings.MEDIA_ROOT, image_object.name)
+        media_path = os.path.join("media", image_object.name)
+
+        f = open(media_path, mode='wb')
         for chunk in image_object.chunks():
             f.write(chunk)
         f.close()
@@ -76,7 +79,7 @@ def upload_form(request):
         models.Boss.objects.create(
             name=form.cleaned_data['name'],
             age=form.cleaned_data['age'],
-            img=db_file_path,
+            img=media_path,
         )
         return HttpResponse("....")
 
